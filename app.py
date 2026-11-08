@@ -210,3 +210,95 @@ try:
 except Exception as error:
     st.error("Unable to load NBA statistics.")
     st.exception(error)
+
+
+from predictions import predict_player
+
+st.divider()
+st.header("🎯 Automatic Player Projections")
+
+try:
+    # Reuse historical data already loaded
+    if "nba_df" not in locals():
+        nba_df = load_nba_data()
+
+    player_names = sorted(
+        nba_df["PLAYER_NAME"].dropna().unique()
+    )
+
+    prediction_player = st.selectbox(
+        "Choose player for prediction",
+        player_names
+    )
+
+    prediction_stat = st.selectbox(
+        "Choose prop type",
+        ["PTS", "REB", "AST"]
+    )
+
+    prediction_line = st.number_input(
+        "Enter bookmaker line",
+        min_value=0.0,
+        value=24.5,
+        step=0.5
+    )
+
+    history = nba_df[
+        nba_df["PLAYER_NAME"] == prediction_player
+    ]
+
+    result = predict_player(
+        history,
+        prediction_stat,
+        prediction_line
+    )
+
+    if result is None:
+        st.warning(
+            "Not enough historical games."
+        )
+    else:
+        st.metric(
+            "Projected Stat",
+            f"{result['projection']:.1f}"
+        )
+
+        c1, c2 = st.columns(2)
+
+        c1.metric(
+            "Over Probability",
+            f"{result['over']:.1%}"
+        )
+
+        c2.metric(
+            "Under Probability",
+            f"{result['under']:.1%}"
+        )
+
+        st.subheader("Historical Averages")
+
+        c1, c2, c3 = st.columns(3)
+
+        c1.metric(
+            "Last 5",
+            f"{result['last5']:.1f}"
+        )
+
+        c2.metric(
+            "Last 10",
+            f"{result['last10']:.1f}"
+        )
+
+        c3.metric(
+            "Last 20",
+            f"{result['last20']:.1f}"
+        )
+
+        st.caption(
+            "Experimental statistical model. "
+            "Probabilities are not yet validated."
+        )
+
+except Exception as error:
+    st.error("Prediction calculation failed.")
+    st.exception(error)
