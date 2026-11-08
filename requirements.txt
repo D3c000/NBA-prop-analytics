@@ -4,3 +4,4 @@ pandas
 numpy
 scipy
 nba_api
+pyarrow
