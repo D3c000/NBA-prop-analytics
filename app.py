@@ -206,8 +206,7 @@ try:
             use_container_width=True
         )
 
+
 except Exception as error:
     st.error("Unable to load NBA statistics.")
-    st.caption(
-        "Check the Streamlit logs if this continues."
-    )
+    st.exception(error)
