@@ -302,3 +302,20 @@ try:
 except Exception as error:
     st.error("Prediction calculation failed.")
     st.exception(error)
+
+
+# NBA DATA QUALITY DASHBOARD
+
+from data_audit import show_data_audit
+
+st.divider()
+
+try:
+    if "nba_df" not in locals():
+        nba_df = load_nba_data()
+
+    show_data_audit(nba_df)
+
+except Exception as error:
+    st.error("Data audit could not run.")
+    st.exception(error)
