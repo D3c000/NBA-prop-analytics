@@ -333,3 +333,17 @@ try:
 except Exception as error:
     st.error("Backtesting failed.")
     st.exception(error)
+
+
+# NBA MODEL VALIDATION DASHBOARD
+
+from model_validation import validate_model
+
+st.divider()
+
+try:
+    validate_model(load_nba_data())
+
+except Exception as error:
+    st.error("Model validation failed.")
+    st.exception(error)
