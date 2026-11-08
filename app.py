@@ -319,3 +319,17 @@ try:
 except Exception as error:
     st.error("Data audit could not run.")
     st.exception(error)
+
+
+# NBA HISTORICAL BACKTESTING
+
+from backtesting import show_backtest
+
+st.divider()
+
+try:
+    show_backtest(load_nba_data())
+
+except Exception as error:
+    st.error("Backtesting failed.")
+    st.exception(error)
